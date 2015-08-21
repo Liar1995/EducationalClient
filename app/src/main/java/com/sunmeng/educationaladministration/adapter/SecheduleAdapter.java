@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -66,8 +67,12 @@ public class SecheduleAdapter extends BaseAdapter {
     public View getView(final int position, View view, ViewGroup parent) {
 
         view = inflater.inflate(R.layout.item_schedule, null);
-        final TextView tvclass = (TextView) view.findViewById(R.id.iv_class);
-        tvclass.setOnClickListener(new View.OnClickListener() {
+        final RelativeLayout rlInfo = (RelativeLayout) view.findViewById(R.id.rl_item_sch);
+        final TextView tvclass = (TextView) view.findViewById(R.id.iv_item_class);
+        final TextView tvTeacher = (TextView) view.findViewById(R.id.iv_item_teacher);
+
+
+        rlInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int js = (position + 1) / 4 + 1;
@@ -77,7 +82,8 @@ public class SecheduleAdapter extends BaseAdapter {
                     js = js - 1;
                 }
                 tvclass.setText("TCDT17");
-                tvclass.setBackgroundColor(mContext.getResources().getColor(R.color.bjcolor));
+                tvTeacher.setText("唐碧");
+                rlInfo.setBackgroundColor(mContext.getResources().getColor(R.color.bjcolor));
 
                 /**
                  * 课程添加弹出框
