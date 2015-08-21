@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home_03"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:background="#009ad6"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp"
+
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back_left" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="星期一"
+            android:textColor="#fff"
+            android:textSize="22sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back_right" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="59dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1dp"
+            android:background="#50ffffff"
+            android:gravity="center"
+            android:text="8月"
+            android:textColor="#009ad6"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            style="@style/schedule_item_date"
+            android:text="上午08:30" />
+
+        <TextView
+            style="@style/schedule_item_date"
+            android:text="上午10:30" />
+
+        <TextView
+            style="@style/schedule_item_date"
+            android:text="下午01:30" />
+
+        <TextView
+            style="@style/schedule_item_date"
+            android:text="下午03:30" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/schedule_item_js"
+                    android:text="教室一" />
+
+                <TextView
+                    style="@style/schedule_item_js"
+                    android:text="教室二" />
+
+                <TextView
+                    style="@style/schedule_item_js"
+                    android:text="教室三" />
+
+                <TextView
+                    style="@style/schedule_item_js"
+                    android:text="教室四" />
+
+                <TextView
+                    style="@style/schedule_item_js"
+                    android:text="教室五" />
+
+                <TextView
+                    style="@style/schedule_item_js"
+                    android:text="教室六" />
+
+                <TextView
+                    style="@style/schedule_item_js"
+                    android:text="教室七" />
+
+                <TextView
+                    style="@style/schedule_item_js"
+                    android:text="教室八" />
+
+                <TextView
+                    style="@style/schedule_item_js"
+                    android:text="实训一" />
+
+                <TextView
+                    style="@style/schedule_item_js"
+                    android:text="实训二" />
+
+                <TextView
+                    style="@style/schedule_item_js"
+                    android:text="实训三" />
+
+                <TextView
+                    style="@style/schedule_item_js"
+                    android:text="阅览室" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <GridView
+                    android:id="@+id/gv_schedules"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:numColumns="4"
+
+
+                    android:scrollbars="none"
+
+                    ></GridView>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
