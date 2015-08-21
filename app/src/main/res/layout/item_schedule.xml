@@ -11,7 +11,7 @@
         android:layout_height="59dp"
         android:layout_marginLeft="1dp"
         android:layout_marginTop="1dp"
-        android:background="#30ffffff"
+        android:background="#15ffffff"
 
         >
 
@@ -19,20 +19,19 @@
             android:id="@+id/iv_item_class"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
             android:layout_margin="10dp"
+            android:textColor="#ffffff"
 
-
-             />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/iv_item_teacher"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_margin="5dp"
+            android:textColor="#ffffff"
             android:textSize="12sp" />
 
     </RelativeLayout>

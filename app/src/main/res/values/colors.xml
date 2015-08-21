@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <color name="bjcolor" >#70ffffff</color>
+    <color name="bjcolor" >#50ffffff</color>
 
     <color name="bjcolor2" >#009ad6</color>
 
