@@ -11,7 +11,7 @@
         android:layout_height="59dp"
         android:layout_marginLeft="1dp"
         android:layout_marginTop="1dp"
-        android:background="#ffffff"
+        android:background="#30ffffff"
 
         >
 
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:layout_margin="10dp"
-            android:textColor="#fff"
+
 
              />
 
@@ -29,7 +29,7 @@
             android:id="@+id/iv_item_teacher"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#fff"
+
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_margin="5dp"
