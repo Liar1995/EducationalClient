@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 public class HttpClientUtil {
 	/**
-	 * *网络连接是否可用
+	 * *网络连接是否可用,Sunmeng
 	 * */
 	public static boolean isConnnected(Context context) {
 		ConnectivityManager connectivityManager = (ConnectivityManager) context
