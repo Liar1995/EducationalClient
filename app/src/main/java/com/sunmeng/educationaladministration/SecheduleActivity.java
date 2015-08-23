@@ -82,7 +82,7 @@ private List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
         View alertDialogSechedule = inflater.inflate(R.layout.alertdialog_data_select, null);
         final DatePicker datePicker = (DatePicker) alertDialogSechedule.findViewById(R.id.datePicker);
 
-        new AlertDialog.Builder(SecheduleActivity.this).setView(alertDialogSechedule).setTitle("请选择排课日期").
+        new AlertDialog.Builder(SecheduleActivity.this).setCancelable(false).setView(alertDialogSechedule).setTitle("请选择排课日期").
                 setIcon(R.mipmap.table_column).
                 setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override

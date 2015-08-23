@@ -56,7 +56,7 @@ public class JsonUtil {
         JSONArray mJSONArray=new JSONArray(jsonstr);
             for (int i=0;i<mJSONArray.length();i++){
                 JSONObject mJSONObject=mJSONArray.getJSONObject(i);
-                mList.add(mJSONObject.getString("kecheng"));
+                mList.add(mJSONObject.getString("toname"));
             }
         } catch (JSONException e) {
             e.printStackTrace();

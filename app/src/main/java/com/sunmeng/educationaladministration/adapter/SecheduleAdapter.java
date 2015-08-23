@@ -206,7 +206,7 @@ public class SecheduleAdapter extends BaseAdapter {
                      * 从服务器获取所以历史课程名称信息
                      * */
                     mHttpUtils.send(HttpRequest.HttpMethod.GET,
-                            HttpClientUtil.HTTP_URL + "kecheng", new RequestCallBack() {
+                            HttpClientUtil.HTTP_URL + "CurriculumAllServlet", new RequestCallBack() {
                                 @Override
                                 public void onSuccess(final ResponseInfo responseInfo) {
                                     new AsyncTask<String, String, List<String>>() {
@@ -227,7 +227,7 @@ public class SecheduleAdapter extends BaseAdapter {
                                 }
                             });
 
-                    new AlertDialog.Builder(mContext).setView(alertDialogSechedule).setTitle("添加课程信息").
+                    new AlertDialog.Builder(mContext).setView(alertDialogSechedule).setCancelable(false).setTitle("添加课程信息").
                             setIcon(R.mipmap.table_column).
                             setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
@@ -240,14 +240,21 @@ public class SecheduleAdapter extends BaseAdapter {
                                     int teacher = 2;
                                     int weizhi = position;
                                     RequestParams params = new RequestParams();
-                                    params.addBodyParameter("Toname", courseName);
-                                    params.addBodyParameter("Totime", SecheduleActivity.selectDate);
-                                    params.addBodyParameter("Week", week + "");
-                                    params.addBodyParameter("ClassRoomid", classRoomInt + "");
-                                    params.addBodyParameter("ClassNuber", classNameArr.get(spn_className.getSelectedItem().toString()));
-                                    params.addBodyParameter("TeacherId", spn_teacherNameArr.get(spn_teacherName.getSelectedItem().toString()));
-                                    params.addBodyParameter("TimeBucket", timeSelect + "");
-                                    params.addBodyParameter("Location", position + "");
+                                    if (courseName.equals("") ||
+                                            classNameArr.get(spn_className.getSelectedItem().toString()).equals("") ||
+                                            spn_teacherNameArr.get(spn_teacherName.getSelectedItem().toString()).equals("")) {
+                                        Toast.makeText(mContext,"请填写完整信息在提交",Toast.LENGTH_LONG).show();
+                                        return;
+                                    } else {
+                                        params.addBodyParameter("Toname", courseName);
+                                        params.addBodyParameter("Totime", SecheduleActivity.selectDate);
+                                        params.addBodyParameter("Week", week + "");
+                                        params.addBodyParameter("ClassRoomid", classRoomInt + "");
+                                        params.addBodyParameter("ClassNuber", classNameArr.get(spn_className.getSelectedItem().toString().trim()));
+                                        params.addBodyParameter("TeacherId", spn_teacherNameArr.get(spn_teacherName.getSelectedItem().toString().trim()));
+                                        params.addBodyParameter("TimeBucket", timeSelect + "");
+                                        params.addBodyParameter("Location", position + "");
+                                    }
                                     mHttpUtils.send(HttpRequest.HttpMethod.POST,
                                             HttpClientUtil.HTTP_URL + "TotalsAddServlet", params, new RequestCallBack() {
                                                 @Override
@@ -257,7 +264,6 @@ public class SecheduleAdapter extends BaseAdapter {
                                                     tvTeacher.setText(spn_teacherName.getSelectedItem().toString());
                                                     rlInfo.setBackgroundColor(mContext.getResources().getColor(R.color.bjcolor));
                                                 }
-
                                                 @Override
                                                 public void onFailure(HttpException e, String s) {
                                                 }
