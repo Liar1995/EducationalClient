@@ -9,12 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="10dp"
-
-        >
+        android:padding="10dp">
 
         <ImageView
             android:layout_width="20dp"
@@ -22,6 +19,7 @@
             android:src="@drawable/back_left" />
 
         <TextView
+            android:id="@+id/sech_data_week"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -36,11 +34,12 @@
             android:src="@drawable/back_right" />
 
     </LinearLayout>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:background="#80ffffff"
-    ></LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#80ffffff"></LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -48,19 +47,40 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="55dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="8月"
-            android:textColor="#fff"
-            android:textSize="16sp"
-            />
+        <!--========================================================================================-->
+        <RelativeLayout
+            android:layout_width="60dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/sech_data_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+
+                android:textColor="#fff"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/sech_data_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="5dp"
+
+                android:textColor="#fff"
+                android:textSize="18sp" />
+
+
+        </RelativeLayout>
+        <!--========================================================================================-->
+
         <LinearLayout
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="#80ffffff"
-            ></LinearLayout>
+            android:background="#80ffffff"></LinearLayout>
+
         <TextView
             style="@style/schedule_item_date"
             android:text="上午08:30" />
@@ -78,11 +98,12 @@
             android:text="下午03:30" />
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#80ffffff"
-        ></LinearLayout>
+        android:background="#80ffffff"></LinearLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -95,7 +116,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="55dp"
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
 
                 android:orientation="vertical">
@@ -150,11 +171,12 @@
 
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#80ffffff"
-                ></LinearLayout>
+                android:background="#80ffffff"></LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">

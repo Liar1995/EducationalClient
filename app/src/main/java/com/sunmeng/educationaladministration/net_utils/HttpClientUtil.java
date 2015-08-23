@@ -20,6 +20,10 @@ import android.net.NetworkInfo;
 import android.widget.Toast;
 
 public class HttpClientUtil {
+
+
+
+	public final static String HTTP_URL="http://192.168.1.113:8080/EducationalService/";
 	/**
 	 * *网络连接是否可用,Sunmeng
 	 * */
