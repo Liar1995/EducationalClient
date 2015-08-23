@@ -97,9 +97,9 @@ public class SecheduleAdapter extends BaseAdapter {
                 /**
                  * 填充下拉数据
                  */
-                spn_className.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, classNameArr));
-                spn_teacherName.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, spn_teacherNameArr));
-                act_courseName.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, courseNameArr));
+                spn_className.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, classNameArr));
+                spn_teacherName.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, spn_teacherNameArr));
+                act_courseName.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, courseNameArr));
 
                 new AlertDialog.Builder(mContext).setView(alertDialogSechedule).setTitle("添加课程信息").
                         setIcon(R.mipmap.table_column).

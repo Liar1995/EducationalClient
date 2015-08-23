@@ -9,12 +9,15 @@ import android.view.View;
 import android.view.Window;
 import android.widget.GridView;
 
+import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.view.annotation.ViewInject;
 import com.sunmeng.educationaladministration.adapter.SecheduleAdapter;
 
 public class SecheduleActivity extends Activity {
 
-
+    @ViewInject(R.id.gv_schedules)
     private GridView gridView;
+
     private SecheduleAdapter secheduleAdapter;
     private LayoutInflater inflater;
 
@@ -23,13 +26,13 @@ public class SecheduleActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_schedule);
+        ViewUtils.inject(SecheduleActivity.this);
 
         init();
         setAdapter();
     }
 
     public void init() {
-        gridView = (GridView) findViewById(R.id.gv_schedules);
         secheduleAdapter = new SecheduleAdapter(this);
         inflater = LayoutInflater.from(SecheduleActivity.this);
         View alertDialogSechedule = inflater.inflate(R.layout.alertdialog_data_select, null);
