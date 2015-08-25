@@ -65,6 +65,7 @@ public class SecheduleAdapter extends BaseAdapter {
     private Map<String, String> classNameArr = null;
     private Map<String, String> spn_teacherNameArr = null;
 
+
     /**
      * HttpUtils
      */
@@ -93,25 +94,35 @@ public class SecheduleAdapter extends BaseAdapter {
         return position;
     }
 
+    public int selectId = 3;
 
     @Override
-    public View getView(final int position, View view, ViewGroup parent) {
+    public View getView(final int position, View view, final ViewGroup parent) {
 
         view = inflater.inflate(R.layout.item_schedule, null);
         final RelativeLayout rlInfo = (RelativeLayout) view.findViewById(R.id.rl_item_sch);
         final TextView tvclass = (TextView) view.findViewById(R.id.iv_item_class);
         final TextView tvTeacher = (TextView) view.findViewById(R.id.iv_item_teacher);
+        final TextView tvid = (TextView) view.findViewById(R.id.iv_item_id);
+        final TextView tvtoname = (TextView) view.findViewById(R.id.iv_item_toname);
 
         //s"toid","location","teid","tename","cnid","cnname","toname"});
         int location = 0;
+
+
         Map<String, Object> map = null;
+
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {
                 map = list.get(i);
                 location = Integer.parseInt(map.get("location").toString());
                 if (location == position) {
+
                     tvclass.setText(map.get("cnname").toString());
                     tvTeacher.setText(map.get("tename").toString());
+                    tvid.setText(map.get("toid").toString());
+                    tvtoname.setText(map.get("toname").toString());
+
                     rlInfo.setBackgroundColor(mContext.getResources().getColor(R.color.bjcolor));
                 }
 
@@ -122,116 +133,126 @@ public class SecheduleAdapter extends BaseAdapter {
         rlInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int js = (position + 1) / 4 + 1;//教室ID
+                int date = (position + 1) % 4;//时间分类
+                if (date == 0) {
+                    date = 4;
+                    js = js - 1;
+                }
+                classRoomInt = js;
+                timeSelect = date;
+
+
+                /**
+                 * 课程添加弹出框
+                 * */
+                View alertDialogSechedule = inflater.inflate(R.layout.alertdialog_add_sechedule, null);
+                spn_className = (Spinner) alertDialogSechedule.findViewById(R.id.spn_className);
+                spn_teacherName = (Spinner) alertDialogSechedule.findViewById(R.id.spn_teacherName);
+                act_courseName = (AutoCompleteTextView) alertDialogSechedule.findViewById(R.id.act_courseName);
+
+
+                /**
+                 * 从服务器获取班级信息
+                 * */
+                mHttpUtils.send(HttpRequest.HttpMethod.GET,
+                        HttpClientUtil.HTTP_URL + "ClassAllServlet", new RequestCallBack() {
+                            @Override
+                            public void onSuccess(final ResponseInfo responseInfo) {
+                                //Toast.makeText(mContext, responseInfo.toString(), Toast.LENGTH_LONG).show();
+                                final List<String> list = new ArrayList<String>();
+                                list.add("cnname");
+                                list.add("cnid");
+                                new AsyncTask<String, String, Map<String, String>>() {
+                                    @Override
+                                    protected Map<String, String> doInBackground(String... params) {
+                                        classNameArr = JsonUtil.getJsonToSpinnerListMap(responseInfo.result.toString(), list);
+                                        return classNameArr;
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(Map<String, String> s) {
+                                        spn_className.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, Utils.getMapListToListString(s)));//
+
+
+                                        spn_className.setSelection(Utils.getMapListId(s, tvclass.getText().toString()));
+
+                                    }
+                                }.execute("");
+                            }
+
+                            @Override
+                            public void onFailure(HttpException e, String s) {
+                            }
+                        });
+
+
+                /**
+                 * 从服务器获取教师信息
+                 * */
+                mHttpUtils.send(HttpRequest.HttpMethod.GET,
+                        HttpClientUtil.HTTP_URL + "TeacherAllServlet", new RequestCallBack() {
+                            @Override
+                            public void onSuccess(final ResponseInfo responseInfo) {
+                                //Toast.makeText(mContext, responseInfo.toString(), Toast.LENGTH_LONG).show();
+                                final List<String> list = new ArrayList<String>();
+                                list.add("tename");
+                                list.add("teid");
+                                new AsyncTask<String, String, Map<String, String>>() {
+                                    @Override
+                                    protected Map<String, String> doInBackground(String... params) {
+                                        spn_teacherNameArr = JsonUtil.getJsonToSpinnerListMap(responseInfo.result.toString(), list);
+                                        return spn_teacherNameArr;
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(Map<String, String> s) {
+                                        spn_teacherName.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, Utils.getMapListToListString(s)));
+                                        spn_teacherName.setSelection(Utils.getMapListId(s, tvTeacher.getText().toString()));
+
+                                    }
+                                }.execute("");
+                            }
+
+                            @Override
+                            public void onFailure(HttpException e, String s) {
+                            }
+                        });
+                /**
+                 * 从服务器获取所以历史课程名称信息
+                 * */
+                mHttpUtils.send(HttpRequest.HttpMethod.GET,
+                        HttpClientUtil.HTTP_URL + "CurriculumAllServlet", new RequestCallBack() {
+                            @Override
+                            public void onSuccess(final ResponseInfo responseInfo) {
+                                new AsyncTask<String, String, List<String>>() {
+                                    @Override
+                                    protected List<String> doInBackground(String... params) {
+                                        return JsonUtil.getJsonToList(responseInfo.result.toString());
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(List<String> s) {
+                                        act_courseName.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, s));
+                                        act_courseName.setText(tvtoname.getText().toString());
+                                    }
+                                }.execute("");
+                            }
+
+                            @Override
+                            public void onFailure(HttpException e, String s) {
+                            }
+                        });
+
+
                 if (tvclass.getText() == "") {
-
-                    int js = (position + 1) / 4 + 1;
-                    int date = (position + 1) % 4;
-                    if (date == 0) {
-                        date = 4;
-                        js = js - 1;
-                    }
-                    classRoomInt = js;
-                    timeSelect = date;
-
-
-                    /**
-                     * 课程添加弹出框
-                     * */
-                    View alertDialogSechedule = inflater.inflate(R.layout.alertdialog_add_sechedule, null);
-                    spn_className = (Spinner) alertDialogSechedule.findViewById(R.id.spn_className);
-                    spn_teacherName = (Spinner) alertDialogSechedule.findViewById(R.id.spn_teacherName);
-                    act_courseName = (AutoCompleteTextView) alertDialogSechedule.findViewById(R.id.act_courseName);
-
-                    /**
-                     * 从服务器获取班级信息
-                     * */
-                    mHttpUtils.send(HttpRequest.HttpMethod.GET,
-                            HttpClientUtil.HTTP_URL + "ClassAllServlet", new RequestCallBack() {
-                                @Override
-                                public void onSuccess(final ResponseInfo responseInfo) {
-                                    //Toast.makeText(mContext, responseInfo.toString(), Toast.LENGTH_LONG).show();
-                                    final List<String> list = new ArrayList<String>();
-                                    list.add("cnname");
-                                    list.add("cnid");
-                                    new AsyncTask<String, String, Map<String, String>>() {
-                                        @Override
-                                        protected Map<String, String> doInBackground(String... params) {
-                                            classNameArr = JsonUtil.getJsonToSpinnerListMap(responseInfo.result.toString(), list);
-                                            return classNameArr;
-                                        }
-
-                                        @Override
-                                        protected void onPostExecute(Map<String, String> s) {
-                                            spn_className.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, Utils.getMapListToListString(s)));//
-                                        }
-                                    }.execute("");
-                                }
-
-                                @Override
-                                public void onFailure(HttpException e, String s) {
-                                }
-                            });
-
-
-                    /**
-                     * 从服务器获取教师信息
-                     * */
-                    mHttpUtils.send(HttpRequest.HttpMethod.GET,
-                            HttpClientUtil.HTTP_URL + "TeacherAllServlet", new RequestCallBack() {
-                                @Override
-                                public void onSuccess(final ResponseInfo responseInfo) {
-                                    //Toast.makeText(mContext, responseInfo.toString(), Toast.LENGTH_LONG).show();
-                                    final List<String> list = new ArrayList<String>();
-                                    list.add("tename");
-                                    list.add("teid");
-                                    new AsyncTask<String, String, Map<String, String>>() {
-                                        @Override
-                                        protected Map<String, String> doInBackground(String... params) {
-                                            spn_teacherNameArr = JsonUtil.getJsonToSpinnerListMap(responseInfo.result.toString(), list);
-                                            return spn_teacherNameArr;
-                                        }
-
-                                        @Override
-                                        protected void onPostExecute(Map<String, String> s) {
-                                            spn_teacherName.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, Utils.getMapListToListString(s)));
-                                        }
-                                    }.execute("");
-                                }
-
-                                @Override
-                                public void onFailure(HttpException e, String s) {
-                                }
-                            });
-                    /**
-                     * 从服务器获取所以历史课程名称信息
-                     * */
-                    mHttpUtils.send(HttpRequest.HttpMethod.GET,
-                            HttpClientUtil.HTTP_URL + "CurriculumAllServlet", new RequestCallBack() {
-                                @Override
-                                public void onSuccess(final ResponseInfo responseInfo) {
-                                    new AsyncTask<String, String, List<String>>() {
-                                        @Override
-                                        protected List<String> doInBackground(String... params) {
-                                            return JsonUtil.getJsonToList(responseInfo.result.toString());
-                                        }
-
-                                        @Override
-                                        protected void onPostExecute(List<String> s) {
-                                            act_courseName.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, s));
-                                        }
-                                    }.execute("");
-                                }
-
-                                @Override
-                                public void onFailure(HttpException e, String s) {
-                                }
-                            });
 
                     new AlertDialog.Builder(mContext).setView(alertDialogSechedule).setCancelable(false).setTitle("添加课程信息").
                             setIcon(R.mipmap.table_column).
-                            setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            setPositiveButton("添加", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+
                                     /**
                                      * 新增课程所需要参数
                                      * */
@@ -241,9 +262,10 @@ public class SecheduleAdapter extends BaseAdapter {
                                     int weizhi = position;
                                     RequestParams params = new RequestParams();
                                     if (courseName.equals("") ||
+
                                             classNameArr.get(spn_className.getSelectedItem().toString()).equals("") ||
                                             spn_teacherNameArr.get(spn_teacherName.getSelectedItem().toString()).equals("")) {
-                                        Toast.makeText(mContext,"请填写完整信息在提交",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(mContext, "请填写完整信息在提交", Toast.LENGTH_LONG).show();
                                         return;
                                     } else {
                                         params.addBodyParameter("Toname", courseName);
@@ -264,6 +286,7 @@ public class SecheduleAdapter extends BaseAdapter {
                                                     tvTeacher.setText(spn_teacherName.getSelectedItem().toString());
                                                     rlInfo.setBackgroundColor(mContext.getResources().getColor(R.color.bjcolor));
                                                 }
+
                                                 @Override
                                                 public void onFailure(HttpException e, String s) {
                                                 }
@@ -276,9 +299,60 @@ public class SecheduleAdapter extends BaseAdapter {
 
                         }
                     }).show();
-                } else {
+                } else
 
-                    Toast.makeText(mContext, "修改页面", Toast.LENGTH_LONG).show();
+                {
+
+
+                    new AlertDialog.Builder(mContext).setView(alertDialogSechedule).setCancelable(false).setTitle("添加课程信息").
+                            setIcon(R.mipmap.table_column).
+                            setPositiveButton("修改", new DialogInterface.OnClickListener() {
+
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    /**
+                                     * 新增课程所需要参数
+                                     * */
+                                    String courseName = act_courseName.getText().toString();
+
+                                    RequestParams params = new RequestParams();
+                                    if (courseName.equals("") ||
+                                            classNameArr.get(spn_className.getSelectedItem().toString()).equals("") ||
+                                            spn_teacherNameArr.get(spn_teacherName.getSelectedItem().toString()).equals("")) {
+                                        Toast.makeText(mContext, "请填写完整信息在提交", Toast.LENGTH_LONG).show();
+                                        return;
+                                    } else {
+
+
+                                        params.addBodyParameter("updateRcourseName", courseName);
+                                        params.addBodyParameter("updateClassNumberID", classNameArr.get(spn_className.getSelectedItem().toString().trim()));
+                                        params.addBodyParameter("updateTeacherId", spn_teacherNameArr.get(spn_teacherName.getSelectedItem().toString().trim()));
+                                        params.addBodyParameter("updateTotalsID", tvid.getText().toString());
+                                    }
+                                    mHttpUtils.send(HttpRequest.HttpMethod.POST,
+                                            HttpClientUtil.HTTP_URL + "TotalsUpdateServlet", params, new RequestCallBack() {
+                                                @Override
+                                                public void onSuccess(ResponseInfo responseInfo) {
+
+                                                    tvclass.setText(spn_className.getSelectedItem().toString());
+                                                    tvTeacher.setText(spn_teacherName.getSelectedItem().toString());
+                                                    rlInfo.setBackgroundColor(mContext.getResources().getColor(R.color.bjcolor));
+                                                }
+
+                                                @Override
+                                                public void onFailure(HttpException e, String s) {
+                                                }
+                                            });
+
+                                }
+                            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).show();
+
                 }
             }
         });
@@ -286,4 +360,6 @@ public class SecheduleAdapter extends BaseAdapter {
 
         return view;
     }
+
+
 }

@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 import com.sunmeng.educationaladministration.adapter.SecheduleAdapter;
 import com.sunmeng.educationaladministration.net_utils.HttpClientUtil;
 import com.sunmeng.educationaladministration.utils.JsonUtil;
+import com.sunmeng.educationaladministration.utils.Utils;
 
 import java.sql.Date;
 import java.text.ParseException;
@@ -34,13 +37,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SecheduleActivity extends Activity {
+public class SecheduleActivity extends Activity implements View.OnClickListener {
 
     @ViewInject(R.id.gv_schedules)
     private GridView gridView;
 
     /**
-     * 日期选择
+     * 页面日期选择
      */
     @ViewInject(R.id.sech_data_month)
     private TextView sech_data_month;
@@ -51,15 +54,25 @@ public class SecheduleActivity extends Activity {
     @ViewInject(R.id.sech_data_week)
     private TextView sech_data_week;
 
-    //总日期
+    /**
+     * 总日期
+     */
     public static String selectDate;
     public static String selectWeek;
+
+    /**
+     * 课表日期选择按钮
+     */
+    @ViewInject(R.id.sched_pre)
+    private ImageView sched_pre;
+    @ViewInject(R.id.sched_next)
+    private ImageView sched_next;
 
     private SecheduleAdapter secheduleAdapter;
     private LayoutInflater inflater;
 
     private HttpUtils httpUtils;
-private List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
+    private List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +80,7 @@ private List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_schedule);
         ViewUtils.inject(SecheduleActivity.this);
-
         init();
-
-       // setAdapter();
 
     }
 
@@ -79,21 +89,25 @@ private List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
         inflater = LayoutInflater.from(SecheduleActivity.this);
         httpUtils = new HttpUtils();
 
+        //注册课表日期选择事件
+        sched_pre.setOnClickListener(this);
+        sched_next.setOnClickListener(this);
+
         View alertDialogSechedule = inflater.inflate(R.layout.alertdialog_data_select, null);
         final DatePicker datePicker = (DatePicker) alertDialogSechedule.findViewById(R.id.datePicker);
 
         new AlertDialog.Builder(SecheduleActivity.this).setCancelable(false).setView(alertDialogSechedule).setTitle("请选择排课日期").
                 setIcon(R.mipmap.table_column).
-                setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                setPositiveButton("添加", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         selectDate = datePicker.getYear() + "-" + (datePicker.getMonth() + 1) + "-" + datePicker.getDayOfMonth();
-                        selectWeek=getWeek(selectDate);
-                        String yue=(datePicker.getMonth() + 1)+"月";
-                        String ri=datePicker.getDayOfMonth()+"";
+                        selectWeek = Utils.getWeek(selectDate);
+                        String yue = (datePicker.getMonth() + 1) + "月";
+                        String ri = datePicker.getDayOfMonth() + "";
                         sech_data_month.setText(yue);
                         sech_data_day.setText(ri);
-                        sech_data_week.setText(getWeek(selectDate));
+                        sech_data_week.setText(Utils.getWeek(selectDate));
                         //Toast.makeText(SecheduleActivity.this, selectDate + "-" + getWeek(selectDate), Toast.LENGTH_LONG).show();
                         getData();
                     }
@@ -102,9 +116,9 @@ private List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
 
     public void setAdapter() {
         secheduleAdapter = new SecheduleAdapter(this);
-
         secheduleAdapter.setList(list);
         gridView.setAdapter(secheduleAdapter);
+
 
     }
 
@@ -112,7 +126,7 @@ private List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
     public void getData() {
 
         RequestParams params = new RequestParams();
-        params.addBodyParameter("selectTime",selectDate);
+        params.addBodyParameter("selectTime", selectDate);
         httpUtils.send(HttpRequest.HttpMethod.POST, HttpClientUtil.HTTP_URL + "TotalsQueryAllServlet",
                 params, new RequestCallBack() {
                     @Override
@@ -125,7 +139,7 @@ private List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
                         String resultJson = responseInfo.result
                                 .toString();
 
-                        list= JsonUtil.getJsonToListMap(resultJson,new String[]{"toid","location","teid","tename","cnid","cnname","toname"});
+                        list = JsonUtil.getJsonToListMap(resultJson, new String[]{"toid", "location", "teid", "tename", "cnid", "cnname", "toname"});
 
                         setAdapter();
 
@@ -134,43 +148,34 @@ private List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
 
     }
 
-    private String getWeek(String date) {
-        String Week = "星期";
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String pTime = date;
-        Calendar c = Calendar.getInstance();
-        try {
-            c.setTime(format.parse(pTime));
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        switch (c.get(Calendar.DAY_OF_WEEK)) {
-            case 1:
-                Week += "日";
+
+    @Override
+    public void onClick(View v) {
+        /**
+         * 点击日期选择后  要做到星期和日期同时联动，而且需要判断日月年的进一，以及合法性
+         * */
+        switch (v.getId()) {
+            //上一天
+            case R.id.sched_pre:
+                selectDate= Utils.calculationDate(selectDate,-1);
+                selectWeek=Utils.getWeek(selectDate);
+                String selectDateArrPre[] =selectDate.split("-");
+                sech_data_month.setText(selectDateArrPre[1]+"月");
+                sech_data_day.setText(selectDateArrPre[2]);
+                sech_data_week.setText(selectWeek);
+                getData();
                 break;
-            case 2:
-                Week += "一";
-                break;
-            case 3:
-                Week += "二";
-                break;
-            case 4:
-                Week += "三";
-                break;
-            case 5:
-                Week += "四";
-                break;
-            case 6:
-                Week += "五";
-                break;
-            case 7:
-                Week += "六";
-                break;
-            default:
+            //下一天
+            case R.id.sched_next:
+                selectDate= Utils.calculationDate(selectDate,+1);
+                selectWeek=Utils.getWeek(selectDate);
+                String selectDateArrNext[] =selectDate.split("-");
+                sech_data_month.setText(selectDateArrNext[1]+"月");
+                sech_data_day.setText(selectDateArrNext[2]);
+                sech_data_week.setText(selectWeek);
+                getData();
                 break;
         }
-        return Week;
     }
 
 
