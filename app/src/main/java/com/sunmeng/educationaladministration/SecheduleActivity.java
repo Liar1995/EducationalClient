@@ -1,17 +1,24 @@
 package com.sunmeng.educationaladministration;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +31,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.sunmeng.educationaladministration.adapter.SecheduleAdapter;
+import com.sunmeng.educationaladministration.animation.MyAnimatableView;
 import com.sunmeng.educationaladministration.net_utils.HttpClientUtil;
 import com.sunmeng.educationaladministration.utils.JsonUtil;
 import com.sunmeng.educationaladministration.utils.Utils;
@@ -37,7 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SecheduleActivity extends Activity implements View.OnClickListener {
+public class SecheduleActivity extends Activity implements View.OnClickListener, Animation.AnimationListener, GestureDetector.OnGestureListener {
 
     @ViewInject(R.id.gv_schedules)
     private GridView gridView;
@@ -74,6 +82,16 @@ public class SecheduleActivity extends Activity implements View.OnClickListener 
     private HttpUtils httpUtils;
     private List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
+    //课表容器
+    @ViewInject(R.id.lin_body)
+    private LinearLayout lin_body;
+
+    /**
+     * 手势滑动
+     */
+    private GestureDetector dectector;// 手势检测器
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,10 +103,9 @@ public class SecheduleActivity extends Activity implements View.OnClickListener 
     }
 
     public void init() {
-
+        dectector = new GestureDetector(this);// 实例化手势检测器对象
         inflater = LayoutInflater.from(SecheduleActivity.this);
         httpUtils = new HttpUtils();
-
         //注册课表日期选择事件
         sched_pre.setOnClickListener(this);
         sched_next.setOnClickListener(this);
@@ -124,7 +141,6 @@ public class SecheduleActivity extends Activity implements View.OnClickListener 
 
 
     public void getData() {
-
         RequestParams params = new RequestParams();
         params.addBodyParameter("selectTime", selectDate);
         httpUtils.send(HttpRequest.HttpMethod.POST, HttpClientUtil.HTTP_URL + "TotalsQueryAllServlet",
@@ -138,14 +154,10 @@ public class SecheduleActivity extends Activity implements View.OnClickListener 
                     public void onSuccess(ResponseInfo responseInfo) {
                         String resultJson = responseInfo.result
                                 .toString();
-
                         list = JsonUtil.getJsonToListMap(resultJson, new String[]{"toid", "location", "teid", "tename", "cnid", "cnname", "toname"});
-
                         setAdapter();
-
                     }
                 });
-
     }
 
 
@@ -157,26 +169,131 @@ public class SecheduleActivity extends Activity implements View.OnClickListener 
         switch (v.getId()) {
             //上一天
             case R.id.sched_pre:
-                selectDate= Utils.calculationDate(selectDate,-1);
-                selectWeek=Utils.getWeek(selectDate);
-                String selectDateArrPre[] =selectDate.split("-");
-                sech_data_month.setText(selectDateArrPre[1]+"月");
+                Animation aniLeft = new TranslateAnimation(0F, -lin_body.getWidth(), 0F, 0F);
+                aniLeft.setAnimationListener(this);
+                aniLeft.setDuration(300);
+                aniLeft.setFillAfter(true);
+                lin_body.startAnimation(aniLeft);
+
+                selectDate = Utils.calculationDate(selectDate, -1);
+                selectWeek = Utils.getWeek(selectDate);
+                String selectDateArrPre[] = selectDate.split("-");
+                sech_data_month.setText(selectDateArrPre[1] + "月");
                 sech_data_day.setText(selectDateArrPre[2]);
                 sech_data_week.setText(selectWeek);
                 getData();
                 break;
             //下一天
             case R.id.sched_next:
-                selectDate= Utils.calculationDate(selectDate,+1);
-                selectWeek=Utils.getWeek(selectDate);
-                String selectDateArrNext[] =selectDate.split("-");
-                sech_data_month.setText(selectDateArrNext[1]+"月");
+
+                Animation aniRight = new TranslateAnimation(0F, +lin_body.getWidth(), 0F, 0F);
+                aniRight.setAnimationListener(this);
+                aniRight.setDuration(300);
+                aniRight.setFillAfter(true);
+                lin_body.startAnimation(aniRight);
+
+                selectDate = Utils.calculationDate(selectDate, +1);
+                selectWeek = Utils.getWeek(selectDate);
+                String selectDateArrNext[] = selectDate.split("-");
+                sech_data_month.setText(selectDateArrNext[1] + "月");
                 sech_data_day.setText(selectDateArrNext[2]);
                 sech_data_week.setText(selectWeek);
                 getData();
                 break;
         }
+
     }
 
 
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        animation = new AlphaAnimation(0.1F, 1.0F);
+        animation.setDuration(1000);
+        lin_body.startAnimation(animation);
+        getData();
+    }
+
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // TODO Auto-generated method stub
+        dectector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent x1, MotionEvent x2, float velocityX, float velocityY) {
+
+        if (x1.getX() - x2.getX() < -350) {// 向右滑动
+
+            Animation aniRight = new TranslateAnimation(0F, +lin_body.getWidth(), 0F, 0F);
+            aniRight.setAnimationListener(this);
+            aniRight.setDuration(300);
+            aniRight.setFillAfter(true);
+            lin_body.startAnimation(aniRight);
+            selectDate = Utils.calculationDate(selectDate, -1);
+            selectWeek = Utils.getWeek(selectDate);
+            String selectDateArrPre[] = selectDate.split("-");
+            sech_data_month.setText(selectDateArrPre[1] + "月");
+            sech_data_day.setText(selectDateArrPre[2]);
+            sech_data_week.setText(selectWeek);
+
+        } else if (x1.getX() - x2.getX() > 350) {// 向左滑动
+            //Toast.makeText(SecheduleActivity.this,(x1.getX() - x2.getX())+"",Toast.LENGTH_LONG).show();
+            Animation aniLeft = new TranslateAnimation(0F, -lin_body.getWidth(), 0F, 0F);
+            aniLeft.setAnimationListener(this);
+            aniLeft.setDuration(300);
+            aniLeft.setFillAfter(true);
+            lin_body.startAnimation(aniLeft);
+            selectDate = Utils.calculationDate(selectDate, +1);
+            selectWeek = Utils.getWeek(selectDate);
+            String selectDateArrNext[] = selectDate.split("-");
+            sech_data_month.setText(selectDateArrNext[1] + "月");
+            sech_data_day.setText(selectDateArrNext[2]);
+            sech_data_week.setText(selectWeek);
+
+        }
+        return false;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev){
+        dectector.onTouchEvent(ev); //让GestureDetector响应触碰事件
+        super.dispatchTouchEvent(ev); //让Activity响应触碰事件
+        return false;
+    }
 }

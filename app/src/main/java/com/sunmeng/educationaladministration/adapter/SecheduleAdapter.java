@@ -174,9 +174,14 @@ public class SecheduleAdapter extends BaseAdapter {
                                     protected void onPostExecute(Map<String, String> s) {
                                         spn_className.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, Utils.getMapListToListString(s)));//
 
+                                        if (tvclass.getText().toString() != "") {
 
-                                        spn_className.setSelection(Utils.getMapListId(s, tvclass.getText().toString()));
 
+                                            spn_className.setSelection(Utils.getMapListId(s, tvclass.getText().toString()));
+                                        }
+                                        else{
+
+                                        }
                                     }
                                 }.execute("");
                             }
@@ -208,8 +213,13 @@ public class SecheduleAdapter extends BaseAdapter {
                                     @Override
                                     protected void onPostExecute(Map<String, String> s) {
                                         spn_teacherName.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, Utils.getMapListToListString(s)));
-                                        spn_teacherName.setSelection(Utils.getMapListId(s, tvTeacher.getText().toString()));
+                                        if (tvTeacher.getText().toString() != "") {
 
+
+                                            spn_teacherName.setSelection(Utils.getMapListId(s, tvTeacher.getText().toString()));
+                                        }else{
+
+                                        }
                                     }
                                 }.execute("");
                             }
@@ -234,7 +244,16 @@ public class SecheduleAdapter extends BaseAdapter {
                                     @Override
                                     protected void onPostExecute(List<String> s) {
                                         act_courseName.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, s));
-                                        act_courseName.setText(tvtoname.getText().toString());
+
+                                        if (tvtoname.getText().toString() != "") {
+
+
+                                            act_courseName.setText(tvtoname.getText().toString());
+                                        }else{
+
+                                        }
+
+
                                     }
                                 }.execute("");
                             }
@@ -304,7 +323,7 @@ public class SecheduleAdapter extends BaseAdapter {
                 {
 
 
-                    new AlertDialog.Builder(mContext).setView(alertDialogSechedule).setCancelable(false).setTitle("添加课程信息").
+                    new AlertDialog.Builder(mContext).setView(alertDialogSechedule).setCancelable(false).setTitle("修改课程信息").
                             setIcon(R.mipmap.table_column).
                             setPositiveButton("修改", new DialogInterface.OnClickListener() {
 

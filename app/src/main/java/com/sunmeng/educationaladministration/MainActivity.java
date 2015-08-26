@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.RelativeLayout;
+
+import com.sunmeng.educationaladministration.animation.MyImageView;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -17,11 +21,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         init();
-        String ss="";
     }
 
-    public void init(){
-        rl_jwpk= (RelativeLayout) findViewById(R.id.rl_jwpk);
+    public void init() {
+        rl_jwpk = (RelativeLayout) findViewById(R.id.rl_jwpk);
         rl_jwpk.setOnClickListener(this);
 
     }
@@ -30,7 +33,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.rl_jwpk:
                 Intent intent=new Intent(this,SecheduleActivity.class);
                 startActivity(intent);

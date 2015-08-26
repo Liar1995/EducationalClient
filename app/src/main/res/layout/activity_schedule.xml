@@ -14,10 +14,12 @@
         android:padding="10dp">
 
         <ImageView
+            android:id="@+id/sched_pre"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/back_left"
-            android:id="@+id/sched_pre" />
+            android:src="@drawable/back"
+
+            />
 
         <TextView
             android:id="@+id/sech_data_week"
@@ -30,11 +32,10 @@
             android:textSize="22sp" />
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/back_right"
             android:id="@+id/sched_next"
-            />
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/export2" />
 
     </LinearLayout>
 
@@ -44,159 +45,163 @@
         android:background="#80ffffff"></LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <!--========================================================================================-->
-        <RelativeLayout
-            android:layout_width="60dp"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/sech_data_month"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-
-                android:textColor="#fff"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/sech_data_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_margin="3dp"
-
-                android:textColor="#fff"
-                android:textSize="18sp" />
-
-
-        </RelativeLayout>
-        <!--========================================================================================-->
-
-        <LinearLayout
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#80ffffff"></LinearLayout>
-
-        <TextView
-            style="@style/schedule_item_date"
-            android:text="上午08:30" />
-
-        <TextView
-            style="@style/schedule_item_date"
-            android:text="上午10:30" />
-
-        <TextView
-            style="@style/schedule_item_date"
-            android:text="下午01:30" />
-
-        <TextView
-            style="@style/schedule_item_date"
-            android:text="下午03:30" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#80ffffff"></LinearLayout>
-
-    <ScrollView
+        android:id="@+id/lin_body"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
+
+            android:gravity="center"
             android:orientation="horizontal">
 
-            <LinearLayout
+            <!--========================================================================================-->
+            <RelativeLayout
                 android:layout_width="60dp"
-                android:layout_height="match_parent"
-
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
                 <TextView
-                    style="@style/schedule_item_js"
-                    android:text="教室一" />
+                    android:id="@+id/sech_data_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+
+                    android:textColor="#fff"
+                    android:textSize="16sp" />
 
                 <TextView
-                    style="@style/schedule_item_js"
-                    android:text="教室二" />
+                    android:id="@+id/sech_data_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="3dp"
 
-                <TextView
-                    style="@style/schedule_item_js"
-                    android:text="教室三" />
-
-                <TextView
-                    style="@style/schedule_item_js"
-                    android:text="教室四" />
-
-                <TextView
-                    style="@style/schedule_item_js"
-                    android:text="教室五" />
-
-                <TextView
-                    style="@style/schedule_item_js"
-                    android:text="教室六" />
-
-                <TextView
-                    style="@style/schedule_item_js"
-                    android:text="教室七" />
-
-                <TextView
-                    style="@style/schedule_item_js"
-                    android:text="教室八" />
-
-                <TextView
-                    style="@style/schedule_item_js"
-                    android:text="实训一" />
-
-                <TextView
-                    style="@style/schedule_item_js"
-                    android:text="实训二" />
-
-                <TextView
-                    style="@style/schedule_item_js"
-                    android:text="实训三" />
-
-                <TextView
-                    style="@style/schedule_item_js"
-                    android:text="阅览室" />
+                    android:textColor="#fff"
+                    android:textSize="18sp" />
 
 
-            </LinearLayout>
-
+            </RelativeLayout>
+            <!--========================================================================================-->
             <LinearLayout
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="#80ffffff"></LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <TextView
+                style="@style/schedule_item_date"
+                android:text="上午08:30" />
 
-                <GridView
-                    android:id="@+id/gv_schedules"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:numColumns="4"
+            <TextView
+                style="@style/schedule_item_date"
+                android:text="上午10:30" />
 
-                    android:scrollbars="none"
+            <TextView
+                style="@style/schedule_item_date"
+                android:text="下午01:30" />
 
-                    ></GridView>
-            </LinearLayout>
+            <TextView
+                style="@style/schedule_item_date"
+                android:text="下午03:30" />
 
         </LinearLayout>
 
-    </ScrollView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#80ffffff"></LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/schedule_item_js"
+                        android:text="教室一" />
+
+                    <TextView
+                        style="@style/schedule_item_js"
+                        android:text="教室二" />
+
+                    <TextView
+                        style="@style/schedule_item_js"
+                        android:text="教室三" />
+
+                    <TextView
+                        style="@style/schedule_item_js"
+                        android:text="教室四" />
+
+                    <TextView
+                        style="@style/schedule_item_js"
+                        android:text="教室五" />
+
+                    <TextView
+                        style="@style/schedule_item_js"
+                        android:text="教室六" />
+
+                    <TextView
+                        style="@style/schedule_item_js"
+                        android:text="教室七" />
+
+                    <TextView
+                        style="@style/schedule_item_js"
+                        android:text="教室八" />
+
+                    <TextView
+                        style="@style/schedule_item_js"
+                        android:text="实训一" />
+
+                    <TextView
+                        style="@style/schedule_item_js"
+                        android:text="实训二" />
+
+                    <TextView
+                        style="@style/schedule_item_js"
+                        android:text="实训三" />
+
+                    <TextView
+                        style="@style/schedule_item_js"
+                        android:text="阅览室" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#80ffffff"></LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <GridView
+                        android:id="@+id/gv_schedules"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:numColumns="4"
+                        android:scrollbars="none"></GridView>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+    </LinearLayout>
 
 </LinearLayout>
