@@ -15,6 +15,10 @@ import java.util.Map;
  */
 public class Utils {
 
+
+    public static Map<String, String> classnumberArr=null;
+    public static Map<String, String> teachernameArr = null;
+    public static Map<String, String> classroomArr = null;
     /**
      * 将星期转换为数字
      */

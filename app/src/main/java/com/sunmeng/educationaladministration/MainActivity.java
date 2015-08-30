@@ -7,10 +7,13 @@ import android.view.View;
 import android.view.Window;
 import android.widget.RelativeLayout;
 
+import com.sunmeng.educationaladministration.animateview.GoogleCardsActivity;
+
 public class MainActivity extends Activity implements View.OnClickListener {
 
     private RelativeLayout rl_jwpk;
-
+    private RelativeLayout kwhd;
+    private RelativeLayout rl_xmdb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +26,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         rl_jwpk = (RelativeLayout) findViewById(R.id.rl_jwpk);
         rl_jwpk.setOnClickListener(this);
 
+        kwhd= (RelativeLayout) findViewById(R.id.kwhd);
+        kwhd.setOnClickListener(this);
+
+        rl_xmdb= (RelativeLayout) findViewById(R.id.rl_xmdb);
+        rl_xmdb.setOnClickListener(this);
     }
 
 
@@ -34,7 +42,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Intent intent=new Intent(this,SecheduleActivity.class);
                 startActivity(intent);
                 break;
-
+            case R.id.kwhd:
+                Intent intent2=new Intent(this,GoogleCardsActivity.class);
+                startActivity(intent2);
+                break;
+            case R.id.rl_xmdb:
+                intent=new Intent(this,ReplyActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 }

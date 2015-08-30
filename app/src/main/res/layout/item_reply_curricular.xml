@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/ll_item_reply"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/item_reply_border"
+        >
+<!--顶部时间-->
+        <RelativeLayout
+            android:id="@+id/toptime"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                     android:id="@+id/tv_date_reply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2015-08-26"
+                    android:textStyle="bold"
+                    android:textColor="#7e2d2d2d"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    />
+                <TextView
+                    android:id="@+id/tv_teacher_reply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="徐敬哲"
+                    android:textStyle="bold"
+                    android:textColor="#7e2d2d2d"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/middleline"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#4a867689"
+            android:layout_below="@id/toptime"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+
+            >
+        </RelativeLayout>
+
+        <!--底部课程班级-->
+        <RelativeLayout
+            android:id="@+id/bottomcourse"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/middleline"
+
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/tv_number_reply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TCAY2139"
+                    android:textStyle="bold"
+                    android:textColor="#7e2d2d2d"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    />
+                <TextView
+                    android:id="@+id/tv_course_reply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="答辩"
+                    android:textStyle="bold"
+                    android:textColor="#7e2d2d2d"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    />
+                <TextView
+                    android:id="@+id/tv_address_reply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="红庙"
+                    android:textStyle="bold"
+                    android:textColor="#7e2d2d2d"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    />
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
+
+
+    </RelativeLayout>
+
+
+
+
+
+</LinearLayout>

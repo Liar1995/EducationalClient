@@ -31,6 +31,37 @@
             android:label="@string/app_name">
 
         </activity>
+
+        <activity
+            android:name=".animateview.GoogleCardsActivity"
+            android:label="@string/app_name">
+
+        </activity>
+        <activity
+            android:name=".AddExtraActivity"
+            android:label="@string/app_name">
+
+        </activity>
+
+
+
+        <activity
+            android:name=".ReplyActivity"
+            android:label="@string/app_name"
+            >
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ReplyAddActivity"
+            android:label="@string/app_name"
+            >
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

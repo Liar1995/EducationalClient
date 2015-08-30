@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/item_corner_border"
+        >
+<!--顶部时间-->
+        <RelativeLayout
+            android:id="@+id/toptime"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/tvtimes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8:30-12:20"
+                    android:textStyle="bold"
+                    android:textColor="#7e2d2d2d"
+                    android:textSize="16sp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tvyears"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2015-12-12"
+                    android:textStyle="bold"
+                    android:textColor="#7e2d2d2d"
+                    android:textSize="16sp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/middleline"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#4a867689"
+            android:layout_below="@id/toptime"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+
+            >
+        </RelativeLayout>
+
+        <!--底部课程班级-->
+        <RelativeLayout
+            android:id="@+id/bottomcourse"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/middleline"
+
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/tvclass"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TCAY2139"
+                    android:textStyle="bold"
+                    android:textColor="#7e2d2d2d"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    />
+                <TextView
+                    android:id="@+id/tvactivitys"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="课外拓展活动"
+                    android:textStyle="bold"
+                    android:textColor="#7e2d2d2d"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
+
+
+    </RelativeLayout>
+
+
+
+
+
+</LinearLayout>
