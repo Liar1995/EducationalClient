@@ -17,8 +17,10 @@ import com.sunmeng.educationaladministration.utils.JsonUtil;
 
 import jxl.Workbook;
 import jxl.WorkbookSettings;
+import jxl.format.BorderLineStyle;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
+import jxl.write.VerticalAlignment;
 import jxl.write.WritableCell;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
@@ -49,12 +51,13 @@ public class JXLUtil {
             arial14format = new WritableCellFormat(arial18font);
             arial14format.setAlignment(jxl.format.Alignment.CENTRE);
             arial14format.setBorder(jxl.format.Border.ALL,
-                    jxl.format.BorderLineStyle.MEDIUM);
+                    BorderLineStyle.THIN);
 
-            arial12font = new WritableFont(WritableFont.ARIAL,15,WritableFont.BOLD);
+            arial12font = new WritableFont(WritableFont.ARIAL,12);
             arial12format = new WritableCellFormat(arial12font);
-            arial12format.setBorder(jxl.format.Border.ALL,jxl.format.BorderLineStyle.MEDIUM);
+            arial12format.setBorder(jxl.format.Border.ALL,jxl.format.BorderLineStyle.THIN);
             arial12format.setAlignment(jxl.format.Alignment.CENTRE);
+            arial12format.setVerticalAlignment(VerticalAlignment.CENTRE);
 
         } catch (WriteException e) {
             e.printStackTrace();
@@ -83,6 +86,12 @@ public class JXLUtil {
             workbook = Workbook.createWorkbook(file);
 
             WritableSheet sheet = workbook.createSheet("中心教室机房占用表", 0);// 建立sheet
+            sheet.setColumnView(0,8);
+
+            for (int i=1;i<14;i++){
+                sheet.setColumnView(i,12);
+
+            }
 
             sheet.mergeCells(0, 0, 14, 0);
 
@@ -179,18 +188,19 @@ public class JXLUtil {
             writebook = Workbook.createWorkbook(new File(fileName),
                     workbook);
             WritableSheet sheet = writebook.getSheet(0);
+
             int cellCount = 0;
             for (int i = 0; i < 7; i++) {
                 cellCount = i * 12;
-                temoList = JsonUtil.getJsonToListMap(jsonStr, i + 1);
+               temoList = JsonUtil.getJsonToListMap(jsonStr, i + 1);
                 /**
                  * 合并单元格：星期，日期，教室机房
                  * */
                 sheet.mergeCells(0, 3 + cellCount, 0, 14 + cellCount);
                 sheet.mergeCells(1, 3 + cellCount, 1, 14 + cellCount);
 
-                sheet.addCell((WritableCell) new Label(0, 3 + i, temoList.get(0).get("wename").toString(), arial12format));
-                sheet.addCell((WritableCell) new Label(1, 3 + i, temoList.get(0).get("totime").toString(), arial12format));
+                sheet.addCell((WritableCell) new Label(0, 3 + cellCount,temoList.get(0).get("wename").toString(), arial12format));
+                sheet.addCell((WritableCell) new Label(1, 3 + cellCount,temoList.get(0).get("totime").toString(), arial12format));
 
                 sheet.addCell((WritableCell) new Label(2, 3 + cellCount, "教室一", arial12format));
                 sheet.addCell((WritableCell) new Label(2, 4 + cellCount, "教室二", arial12format));

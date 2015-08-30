@@ -257,7 +257,13 @@ public class SecheduleActivity extends Activity implements View.OnClickListener,
     private void SecheduleToExcel(String resultJson) {
 
         if (flag) {
+
             exportingDialog = new AlertDialog.Builder(SecheduleActivity.this).setView(alertdialog_exporting).show();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             file = new File(getSDPath() + "/Excel");
             makeDir(file);
             JXLUtil.initExcel(file.toString() + "/excel.xls");

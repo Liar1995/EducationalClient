@@ -99,7 +99,6 @@ public class Utils {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
         return sdf.format(dt1);
     }
 
