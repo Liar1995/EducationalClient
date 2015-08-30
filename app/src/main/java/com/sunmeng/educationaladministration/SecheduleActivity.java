@@ -1,11 +1,10 @@
 package com.sunmeng.educationaladministration;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Environment;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,9 +13,9 @@ import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,19 +30,19 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.sunmeng.educationaladministration.adapter.SecheduleAdapter;
-import com.sunmeng.educationaladministration.animation.MyAnimatableView;
+import com.sunmeng.educationaladministration.excel.JXLUtil;
 import com.sunmeng.educationaladministration.net_utils.HttpClientUtil;
 import com.sunmeng.educationaladministration.utils.JsonUtil;
 import com.sunmeng.educationaladministration.utils.Utils;
 
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import jxl.write.WritableCellFormat;
+import jxl.write.WritableFont;
+import jxl.write.WriteException;
 
 public class SecheduleActivity extends Activity implements View.OnClickListener, Animation.AnimationListener, GestureDetector.OnGestureListener {
 
@@ -74,7 +73,7 @@ public class SecheduleActivity extends Activity implements View.OnClickListener,
     @ViewInject(R.id.sched_pre)
     private ImageView sched_pre;
     @ViewInject(R.id.sched_next)
-    private ImageView sched_next;
+    private ImageButton sched_next;
 
     private SecheduleAdapter secheduleAdapter;
     private LayoutInflater inflater;
@@ -90,6 +89,56 @@ public class SecheduleActivity extends Activity implements View.OnClickListener,
      * 手势滑动
      */
     private GestureDetector dectector;// 手势检测器
+
+
+    /**
+     * Excel导出加载动画
+     */
+    private View alertdialog_exporting;
+    private AlertDialog exportingDialog = null;
+
+    /**
+     * Excel工作簿初始化
+     */
+    public static WritableFont arial18font = null;
+
+    public static WritableFont arial12font = null;
+    public static WritableCellFormat arial12format = null;
+
+    /**
+     * Excel文件导出对象
+     */
+    private File file;
+
+    /**
+     * 导出按钮标识
+     * */
+    private boolean flag=false;
+
+
+
+    /**
+     * 格式定义
+     */
+    public static void format() {
+        try {
+            arial18font = new WritableFont(WritableFont.ARIAL, 18,
+                    WritableFont.BOLD);
+            arial18font.setColour(jxl.format.Colour.BLACK);
+
+
+            arial12font = new WritableFont(WritableFont.ARIAL, 12);
+            arial12format = new WritableCellFormat(arial12font);
+            arial12format.setBorder(jxl.format.Border.ALL,
+                    jxl.format.BorderLineStyle.THIN);
+            arial12format.setAlignment(jxl.format.Alignment.CENTRE);
+
+
+        } catch (WriteException e) {
+
+            e.printStackTrace();
+        }
+    }
 
 
     @Override
@@ -127,6 +176,11 @@ public class SecheduleActivity extends Activity implements View.OnClickListener,
                         sech_data_week.setText(Utils.getWeek(selectDate));
                         //Toast.makeText(SecheduleActivity.this, selectDate + "-" + getWeek(selectDate), Toast.LENGTH_LONG).show();
                         getData();
+                        if (Utils.parseintWeekToInt(Utils.getWeek(selectDate)) == 7) {
+                            flag=true;
+                        } else {
+                            flag=false;
+                        }
                     }
                 }).show();
     }
@@ -163,70 +217,90 @@ public class SecheduleActivity extends Activity implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
+        alertdialog_exporting = inflater.inflate(R.layout.alertdialog_exporting, null);
+
         /**
          * 点击日期选择后  要做到星期和日期同时联动，而且需要判断日月年的进一，以及合法性
          * */
         switch (v.getId()) {
-            //上一天
+            //返回
             case R.id.sched_pre:
-                Animation aniLeft = new TranslateAnimation(0F, -lin_body.getWidth(), 0F, 0F);
-                aniLeft.setAnimationListener(this);
-                aniLeft.setDuration(300);
-                aniLeft.setFillAfter(true);
-                lin_body.startAnimation(aniLeft);
-
-                selectDate = Utils.calculationDate(selectDate, -1);
-                selectWeek = Utils.getWeek(selectDate);
-                String selectDateArrPre[] = selectDate.split("-");
-                sech_data_month.setText(selectDateArrPre[1] + "月");
-                sech_data_day.setText(selectDateArrPre[2]);
-                sech_data_week.setText(selectWeek);
-                getData();
+                finish();
                 break;
-            //下一天
+            //导出
             case R.id.sched_next:
+                RequestParams dateAll = new RequestParams();
+                dateAll.addBodyParameter("selectTime", selectDate);
+                httpUtils.send(HttpRequest.HttpMethod.POST, HttpClientUtil.HTTP_URL + "TotalsQueryAllDateServlet",
+                        dateAll, new RequestCallBack() {
+                            @Override
+                            public void onFailure(HttpException error,
+                                                  String message) {
+                            }
 
-                Animation aniRight = new TranslateAnimation(0F, +lin_body.getWidth(), 0F, 0F);
-                aniRight.setAnimationListener(this);
-                aniRight.setDuration(300);
-                aniRight.setFillAfter(true);
-                lin_body.startAnimation(aniRight);
-
-                selectDate = Utils.calculationDate(selectDate, +1);
-                selectWeek = Utils.getWeek(selectDate);
-                String selectDateArrNext[] = selectDate.split("-");
-                sech_data_month.setText(selectDateArrNext[1] + "月");
-                sech_data_day.setText(selectDateArrNext[2]);
-                sech_data_week.setText(selectWeek);
-                getData();
+                            @Override
+                            public void onSuccess(ResponseInfo responseInfo) {
+                                String resultJson = responseInfo.result
+                                        .toString();
+                                SecheduleToExcel(resultJson);
+                            }
+                        });
+                //Toast.makeText(this,"开始导出到Excel",Toast.LENGTH_LONG).show();
                 break;
         }
 
     }
 
+    /**
+     * 将一周数据导出到Excel
+     */
+    private void SecheduleToExcel(String resultJson) {
 
-    @Override
-    public void onAnimationStart(Animation animation) {
-
+        if (flag) {
+            exportingDialog = new AlertDialog.Builder(SecheduleActivity.this).setView(alertdialog_exporting).show();
+            file = new File(getSDPath() + "/Excel");
+            makeDir(file);
+            JXLUtil.initExcel(file.toString() + "/excel.xls");
+            JXLUtil.writeObjListToExcel(resultJson, getSDPath() + "/Excel/excel.xls",
+                    this);
+            exportingDialog.dismiss();
+            Toast.makeText(SecheduleActivity.this, "导出完毕", Toast.LENGTH_LONG).show();
+        } else if (!flag) {
+            Toast.makeText(SecheduleActivity.this,"请将日期选择到周日在进行导出",Toast.LENGTH_LONG).show();
+        }
     }
 
-    @Override
-    public void onAnimationEnd(Animation animation) {
-        animation = new AlphaAnimation(0.1F, 1.0F);
-        animation.setDuration(1000);
-        lin_body.startAnimation(animation);
-        getData();
+
+    /**
+     * 判断文件夹是否存在及创建
+     */
+    public static void makeDir(File dir) {
+        if (!dir.getParentFile().exists()) {
+            makeDir(dir.getParentFile());
+        }
+        dir.mkdirs();
+    }
+
+    /**
+     * 判断SD卡是否可用
+     */
+    public String getSDPath() {
+        File sdDir = null;
+        boolean sdCardExist = Environment.getExternalStorageState().equals(
+                android.os.Environment.MEDIA_MOUNTED); // 判断sd卡是否存在
+        if (sdCardExist) {
+            sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
+        }
+        String dir = sdDir.toString();
+        return dir;
     }
 
 
-    @Override
-    public void onAnimationRepeat(Animation animation) {
-
-    }
-
+    /**
+     * Activity中onTouchEvent
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // TODO Auto-generated method stub
         dectector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
@@ -285,15 +359,40 @@ public class SecheduleActivity extends Activity implements View.OnClickListener,
             sech_data_month.setText(selectDateArrNext[1] + "月");
             sech_data_day.setText(selectDateArrNext[2]);
             sech_data_week.setText(selectWeek);
-
+        }
+        if (Utils.parseintWeekToInt(Utils.getWeek(selectDate)) == 7) {
+            flag=true;
+        } else {
+            flag=false;
         }
         return false;
     }
 
+    /**
+     * dispatchTouchEvent用于事件的分发
+     */
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev){
+    public boolean dispatchTouchEvent(MotionEvent ev) {
         dectector.onTouchEvent(ev); //让GestureDetector响应触碰事件
         super.dispatchTouchEvent(ev); //让Activity响应触碰事件
         return false;
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        animation = new AlphaAnimation(0.1F, 1.0F);
+        animation.setDuration(1000);
+        lin_body.startAnimation(animation);
+        getData();
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
     }
 }

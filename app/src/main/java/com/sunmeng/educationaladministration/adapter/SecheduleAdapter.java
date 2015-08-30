@@ -125,7 +125,6 @@ public class SecheduleAdapter extends BaseAdapter {
 
                     rlInfo.setBackgroundColor(mContext.getResources().getColor(R.color.bjcolor));
                 }
-
             }
         }
 

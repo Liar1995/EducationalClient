@@ -31,11 +31,12 @@
             android:textColor="#fff"
             android:textSize="22sp" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/sched_next"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@drawable/export2" />
+            android:background="@drawable/export2"
+            />
 
     </LinearLayout>
 
